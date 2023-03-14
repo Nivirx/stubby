@@ -1,0 +1,16 @@
+[package]
+name = "stubby"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rlibc = "1.0.0"
+
+uefi = { version = "0.19.1", features = ['logger', 'alloc', ] }
+uefi-services = "0.16.0"
+uefi-macros = "0.10.0"
+log = { version = "0.4.17", default-features = false }
+goblin = { version = "0.6.1", default-features = false, features = ['elf32', 'elf64', 'alloc', 'endian_fd'] }
+arrayvec = { version = "0.7.2", default-features = false }
