@@ -29,6 +29,9 @@ use uefi::{
     },
 };
 
+mod uefi_fb;
+mod sync;
+
 #[uefi_macros::entry]
 pub fn efi_main(_image: Handle, mut st: SystemTable<Boot>) -> Status {
     // Initialize logging, memory allocation and uefi services
