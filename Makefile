@@ -26,7 +26,7 @@ clean:
 	rm -rv $(BOOT_DIR)
 	@RUST_TARGET_PATH=$(shell pwd) cargo clean --target $(TARGET)
 
-run-debug: $(target_debug)
+launch-debug: $(target_debug)
 	@RUST_TARGET_PATH=$(shell pwd) cargo +nightly build -Z build-std --target $(TARGET) --verbose
 	mkdir -p $(BOOT_DIR)/EFI/BOOT/
 	cp -v $(target_debug) $(BOOT_DIR)/EFI/BOOT/BOOTX64.EFI
