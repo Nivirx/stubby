@@ -28,6 +28,7 @@ use uefi::{
         AllocateType, BootServices, MemoryType, OpenProtocolAttributes, OpenProtocolParams,
     },
 };
+use uefi_fb::UefiFb;
 
 mod uefi_fb;
 mod sync;
@@ -68,36 +69,14 @@ pub fn efi_main(_image: Handle, mut st: SystemTable<Boot>) -> Status {
         }
     };
 
+    let fb = uefi_fb::UefiFb::new();
+    uefifb_test(&fb)
+}
 
-    
+fn uefifb_test(fb: &UefiFb) -> Status {
 
-    let handle = bt.get_handle_for_protocol::<GraphicsOutput>()
-        .expect("missing GraphicsOutput protocol");
-
-    
-    let mut gop = unsafe {
-        let mut gop_proto = st.boot_services().open_protocol::<GraphicsOutput>(
-            OpenProtocolParams {
-                handle,
-                agent: st.boot_services().image_handle(),
-                controller: None,
-            },
-            // For this test, don't open in exclusive mode. That
-            // would break the connection between stdout and the
-            // video console.
-            OpenProtocolAttributes::GetProtocol,
-        )
-        .expect("failed to open Graphics Output Protocol");
-
-        gop_proto
-    };
-    
-    set_graphics_mode(&mut gop);
-    fill_color(&mut gop);
-    draw_fb(&mut gop);
+    // run tests here
     info!("GOP Framebuffer test complete");
-    
-    // Return success status
     Status::SUCCESS
 }
 
