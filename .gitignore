@@ -1,2 +1,6 @@
 /target
 /BOOT
+/BOOT/*
+*.fd
+BOOT/EFI/BOOT/BOOTX64.EFI
+
