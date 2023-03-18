@@ -13,11 +13,14 @@ qemu_drive := -drive format=raw,file=fat:rw:$(BOOT_DIR)
 target_debug := target/$(TARGET)/debug/$(PROJECT).efi
 target_release := target/$(TARGET)/release/$(PROJECT).efi
 
-.PHONY: all release debug clean run-debug run
+.PHONY: all release debug clean launch-debug launch configure
 
 all: $(target_debug) $(target_release)
 debug: $(target_debug)
 release: $(target_release)
+
+configure:
+	mkdir $(BOOT_DIR)
 
 clean:
 	rm -rv $(BOOT_DIR)
@@ -29,7 +32,7 @@ run-debug: $(target_debug)
 	cp -v $(target_debug) $(BOOT_DIR)/EFI/BOOT/BOOTX64.EFI
 	@qemu-system-$(ARCH) $(qemu_args) $(qemu_efi) $(qemu_efi_vars) $(qemu_drive)
 
-run: $(target_release)
+launch: $(target_release)
 	@RUST_TARGET_PATH=$(shell pwd) cargo +nightly build -Z build-std --target $(TARGET) --release
 	mkdir -p $(BOOT_DIR)/EFI/BOOT/
 	cp -v $(target_release) $(BOOT_DIR)/EFI/BOOT/BOOTX64.EFI
