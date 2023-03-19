@@ -18,9 +18,17 @@ pub struct UefiFb<'a> {
     gop: ScopedProtocol<'a, GraphicsOutput<'a>>
 }
 
-impl UefiFb<'_> {
+impl<'a> core::ops::Deref for UefiFb<'a> {
+    type Target = ScopedProtocol<'a, GraphicsOutput<'a>>;
 
-    pub fn new() -> UefiFb<'static> {
+    fn deref(&self) -> &Self::Target {
+        &self.gop
+    }
+}
+
+impl<'a> UefiFb<'a> {
+
+    pub fn new() -> UefiFb<'a> {
         let st_ref = unsafe { uefi_services::system_table().as_ref() };
         let bt = st_ref.boot_services();
 
@@ -68,7 +76,7 @@ impl UefiFb<'_> {
     }
 
     // Fill the screen with color.
-    fn fb_blt_fill(&mut self, color: BltPixel, dest: (usize, usize), dims: (usize, usize)) {
+    pub fn fb_blt_fill(&mut self, color: BltPixel, dest: (usize, usize), dims: (usize, usize)) {
         let op = BltOp::VideoFill {
             color,
             dest,
@@ -78,9 +86,8 @@ impl UefiFb<'_> {
         self.gop.blt(op).expect("Failed to fill screen with color");
     }
 
-
     // Draw directly to the frame buffer.
-    fn draw_fb(&mut self, index: usize, rgb: [u8; 3]) {
+    pub fn draw_fb(&mut self, index: usize, rgb: [u8; 3]) {
         let mi = self.gop.current_mode_info();
         let mut fb = self.gop.frame_buffer();
 
